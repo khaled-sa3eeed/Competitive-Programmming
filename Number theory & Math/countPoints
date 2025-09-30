@@ -1,0 +1,11 @@
+int64_t countPoints(int64_t r)
+{
+    // count the points in circle with radius r
+    int64_t count = 0;
+    for (int64_t i = -r; i <= r; i++)
+    {
+        int64_t po = sqrt(r * r - i * i);
+        count += 2 * po + 1;
+    }
+    return count;
+}
