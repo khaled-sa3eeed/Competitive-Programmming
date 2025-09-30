@@ -1,0 +1,49 @@
+#include <bits/stdc++.h>
+using namespace std;
+const int64_t mod = 1e9 + 7, N = 1e6 + 5;
+int64_t fastpowMod(int64_t b, int64_t p)
+{
+    int mod = 1e9 + 7;
+    int64_t result = 1;
+    while (p > 0)
+    {
+        if (p & 1) { (result *= b) %= mod; }
+        (b *= b) %= mod;
+        p >>= 1;
+    }
+    return result % mod;
+}
+
+int64_t add(int64_t a, int64_t b) { return ((a % mod) + (b % mod)) % mod; }
+int64_t sub(int64_t a, int64_t b) { return ((a % mod) - (b % mod) + mod) % mod; }
+int64_t mul(int64_t a, int64_t b) { return ((a % mod) * (b % mod)) % mod; }
+int64_t inv(int64_t a) { return fastpowMod(a, mod - 2); }
+int64_t division(int64_t a, int64_t b) { return mul(a, inv(b)); }
+
+int64_t fact[N], invfact[N];
+
+void pre()
+{
+    fact[0] = 1;
+    for (int i = 1; i < N; ++i) { fact[i] = mul(i, fact[i - 1]); }
+    invfact[N - 1] = inv(fact[N - 1]);
+    for (int i = N - 2; ~i; --i) { invfact[i] = mul(invfact[i + 1], i + 1); }
+}
+
+int64_t npr(int64_t n, int64_t r) { return mul(fact[n], invfact[n - r]); }
+
+int64_t npr2(int64_t le, int64_t ri)
+{
+    if (le < ri) { swap(le, ri); }
+    int64_t ret = 1;
+    for (int64_t i = le - ri + 1; i <= le; i++)
+    {
+        ret *= i;
+        ret %= mod;
+    }
+    return ret;
+}
+
+int64_t ncr(int64_t n, int64_t r) { return mul(fact[n], mul(invfact[r], invfact[n - r])); }
+int64_t StarsAndBars(int64_t n, int64_t m) { return ncr(n + m - 1, m); }
+// preeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
