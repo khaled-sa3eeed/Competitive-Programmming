@@ -1,0 +1,119 @@
+class segmentTree
+{
+    // 0-based 
+private:
+    struct node
+    {
+        int64_t n = 0, mn, mx, sum, counter;
+
+        node()
+        {
+            sum = counter = 0;
+            mn = 1e18;
+            mx = -1e18;
+        }
+    };
+
+    int64_t size = 1; // size of the segment tree
+    vector<node> tree; //
+
+    node merge(node le, node ri)
+    {
+        // le -> value of left child of the current node
+        // ri -> value of right child of the current node
+
+        node ret; ///////////////////////////////////////////////////////////////
+
+        return ret;
+    }
+
+    void build(int segIdx, int Lseg, int Rseg, vector<int64_t>& v)
+    {
+        /*
+           seqIdx -> current node
+           [Lseg , Rseg] -> the range of the node(segment) in the tree
+           v -> the input array
+         */
+        if (Lseg == Rseg)
+        {
+            if (Lseg < v.size())
+            {
+                tree[segIdx].n = v[Lseg]; //////////////////////////////////////////////////
+            }
+            return;
+        }
+        int64_t mid = (Lseg + Rseg) / 2;
+        int64_t leftChild = 2 * segIdx + 1;
+        int64_t rightChild = 2 * segIdx + 2;
+        build(leftChild, Lseg, mid, v);
+        build(rightChild, mid + 1, Rseg, v);
+
+        tree[segIdx] = merge(tree[leftChild], tree[rightChild]);
+    }
+
+    void update(int segIdx, int Lseg, int Rseg, int idx, int64_t val)
+    {
+        /*
+        seqIdx -> current node
+        [Lseg , Rseg] -> the range of the node(segment) in the tree
+        idx -> index to update
+        val -> new value
+        */
+
+        if (Lseg == Rseg) // leaf node
+        {
+            tree[segIdx].n = val; ////////////////////////////////////////////////////////////////////////
+            return;
+        }
+
+        int64_t mid = (Lseg + Rseg) / 2;
+        int64_t leftChild = 2 * segIdx + 1;
+        int64_t rightChild = 2 * segIdx + 2;
+
+        if (idx <= mid) { update(leftChild, Lseg, mid, idx, val); }
+        else { update(rightChild, mid + 1, Rseg, idx, val); }
+
+        tree[segIdx] = merge(tree[leftChild], tree[rightChild]);
+    }
+
+    node query(int segIdx, int Lseg, int Rseg, int Lque, int Rque)
+    {
+        /*
+        seqIdx -> current node
+        [Lseg , Rseg] -> the range of the node in the segment tree
+        Lque -> left query
+        Rque -> right query
+         */
+
+        if (Lque <= Lseg && Rque >= Rseg) { return tree[segIdx]; }
+        if (Lque > Rseg || Lseg > Rque) { return node(); }
+
+        int64_t mid = (Lseg + Rseg) / 2;
+        int64_t leftChild = 2 * segIdx + 1;
+        int64_t rightChild = 2 * segIdx + 2;
+
+        node LeftQuery = query(leftChild, Lseg, mid, Lque, Rque);
+        node RightQuery = query(rightChild, mid + 1, Rseg, Lque, Rque);
+
+        return merge(LeftQuery, RightQuery);
+    }
+
+public:
+    segmentTree(vector<int64_t>& v)
+    {
+        while (size < v.size()) { size <<= 1; }
+        tree.assign(2 * size, node());
+
+        build(0, 0, size - 1, v);
+    }
+
+    void update(int idx, int64_t val)
+    {
+        update(0, 0, size - 1, idx, val);
+    }
+
+    node query(int Lque, int Rque)
+    {
+        return query(0, 0, size - 1, Lque, Rque);
+    }
+};
