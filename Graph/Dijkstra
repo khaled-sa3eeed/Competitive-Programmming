@@ -1,0 +1,39 @@
+int n, m;
+    cin >> n >> m;
+    vector<pair<int, int>> adj[n + 1];
+    vector<int> v;
+
+    for (int i = 0; i < m; i++)
+    {
+        int a, b, w;
+        cin >> a >> b >> w;
+        adj[a].push_back({w, b});
+        adj[b].push_back({w, a});
+    }
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> prq;
+
+    vector<int64_t> dis(n + 1, 1e18);
+    dis[0] = 0;
+    prq.push({0, 0});
+    while (prq.size())
+    {
+        auto i = prq.top();
+        int w = i.first;
+        int node = i.second;
+        prq.pop();
+        if (dis[node] != w) { continue; }
+
+        for (auto& it : adj[node])
+        {
+            if (dis[it.second] > it.first + w)
+            {
+                dis[it.second] = it.first + w;
+                prq.push({it.first + w, it.second});
+            }
+        }
+    }
+    for (auto& it : dis)
+    {
+        cout << it << ' ';
+    }
