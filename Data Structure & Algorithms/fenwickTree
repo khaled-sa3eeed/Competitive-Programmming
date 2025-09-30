@@ -1,4 +1,4 @@
-class fenwickTree
+struct fenwickTree
 {
     vector<int64_t> f;
     int n;
