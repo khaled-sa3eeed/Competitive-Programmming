@@ -1,0 +1,83 @@
+const int base1 = 31, mod1 = 1e9 + 7, N = 1e6 + 5;
+const int base2 = 37, mod2 = 2e9 + 11;
+
+int64_t powMod1[N], powMod2[N];
+int64_t mul(int64_t a, int64_t b, int64_t mod) { return ((a % mod) * (b % mod)) % mod; }
+int64_t add(int64_t a, int64_t b, int64_t mod) { return ((a % mod) + (b % mod)) % mod; }
+int64_t sub(int64_t a, int64_t b, int64_t mod) { return ((a % mod) - (b % mod) + mod) % mod; }
+
+int64_t fastpowMod(int64_t b, int64_t p, int64_t mod)
+{
+    int64_t res = 1;
+    while (p > 0)
+    {
+        if (p & 1) { res = mul(res, b, mod); }
+        b = mul(b, b, mod);
+        p >>= 1;
+    }
+    return res % mod;
+}
+
+int64_t inv1 = 0, inv2 = 0;
+
+void HashIni()
+{
+    inv1 = fastpowMod(base1, mod1 - 2, mod1);
+    inv2 = fastpowMod(base2, mod2 - 2, mod2);
+    powMod1[0] = powMod2[0] = 1;
+    for (int i = 1; i < N; i++)
+    {
+        powMod1[i] = mul(powMod1[i - 1], base1, mod1);
+        powMod2[i] = mul(powMod2[i - 1], base2, mod2);
+    }
+}
+
+class Hashing
+{
+    deque<char> dq;
+
+public:
+    int64_t h1 = 0, h2 = 0, len = 0;
+
+    void push_back(char ch)
+    {
+        int c = ch - 'a' + 1;
+        h1 = add(mul(h1, base1, mod1), c, mod1);
+        h2 = add(mul(h2, base2, mod2), c, mod2);
+        dq.push_back(ch);
+        len++;
+    }
+
+    void push_front(char ch)
+    {
+        int c = ch - 'a' + 1;
+        h1 = add(h1, mul(c, powMod1[len], mod1), mod1);
+        h2 = add(h2, mul(c, powMod2[len], mod2), mod2);
+        dq.push_front(ch);
+        len++;
+    }
+
+    void pop_back()
+    {
+        if (!len) { return; }
+        int ch = dq.back() - 'a' + 1;
+        h1 = mul(sub(h1, ch, mod1), inv1, mod1);
+        h2 = mul(sub(h2, ch, mod2), inv2, mod2);
+        dq.pop_back();
+        len--;
+    }
+
+    void pop_front()
+    {
+        if (!len) { return; }
+        int ch = dq.front() - 'a' + 1;
+        len--;
+        h1 = sub(h1, mul(ch, powMod1[len], mod1), mod1);
+        h2 = sub(h2, mul(ch, powMod2[len], mod2), mod2);
+        dq.pop_front();
+    }
+
+    pair<int64_t, int64_t> getHash() { return {h1, h2}; }
+};
+
+///////////////////// HashIni();
