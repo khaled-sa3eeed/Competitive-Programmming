@@ -1,0 +1,20 @@
+struct monotonicStack
+{
+    stack<int> st;
+
+    void add(int x)
+    {
+        while (!st.empty() && st.top() > x) { st.pop(); }
+        st.push(x);
+    }
+
+
+    int top() { return st.top(); }
+
+    bool empty() { return st.empty(); }
+
+    void pop()
+    {
+        if (!st.empty()) st.pop();
+    }
+};
