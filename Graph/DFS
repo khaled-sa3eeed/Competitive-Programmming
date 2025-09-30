@@ -1,0 +1,20 @@
+const int dx[] = {0, 1, -1, 0, -1, 1, 1, -1};
+const int dy[] = {1, 0, 0, -1, 1, 1, -1, -1};
+
+bool valid(int x, int y)
+{
+    return x >= 0 && x < n && y >= 0 && y < m;
+}
+
+const int N = 2e6 + 5;
+vector<int> adj[N];
+vector<bool> vis(N);
+
+void DFS(int u)
+{
+    vis[u] = true;
+    for (auto& it : adj[u])
+    {
+        if (!vis[it]) { DFS(it); }
+    }
+}
