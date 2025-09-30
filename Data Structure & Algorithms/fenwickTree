@@ -1,0 +1,33 @@
+class fenwickTree
+{
+    vector<int64_t> f;
+    int n;
+
+    Fenwick_Tree(int m)
+    {
+        f.resize(m + 5);
+        n = m + 5;
+    }
+
+    int64_t query(int i)
+    {
+        int64_t ret = 0;
+        while (i)
+        {
+            ret += f[i];
+            i -= i & -i;
+        }
+        return ret;
+    }
+
+    int64_t query(int l, int r) { return query(r) - query(l - 1); }
+
+    void update(int i, int64_t val)
+    {
+        while (i < n)
+        {
+            f[i] += val;
+            i += i & -i;
+        }
+    }
+};
