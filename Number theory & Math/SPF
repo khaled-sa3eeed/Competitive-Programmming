@@ -1,0 +1,16 @@
+int64_t N = 1e6 + 5;
+vector<int> sp(N);
+void SPF()
+{
+    iota(sp.begin(), sp.end(), 0);
+    for (int i = 2; i * i <= N; i++)
+    {
+        if (sp[i] == i)
+        {
+            for (int j = 2 * i; j < N; j += i)
+            {
+                if (sp[j] == j) { sp[j] = i; }
+            }
+        }
+    }
+}
