@@ -1,0 +1,36 @@
+string sumTwoStrings(string a, string b)
+{
+
+    reverse(a.begin(),a.end());
+    reverse(b.begin(),b.end());
+    string res = "";
+    int x = 0;
+    int i = 0;
+    for (; i < min(a.size(), b.size()); i++)
+    {
+        x += (a[i] - '0' + b[i] - '0');
+        res += to_string(x % 10);
+        x /= 10;
+    }
+    while (i < a.size())
+    {
+        x += (a[i] - '0');
+        res += to_string(x % 10);
+        x /= 10;
+        i++;
+    }
+    while (i < b.size())
+    {
+        x += (b[i] - '0');
+        res += to_string(x % 10);
+        x /= 10;
+        i++;
+    }
+    while (x)
+    {
+        res += to_string(x % 10);
+        x /= 10;
+    }
+    reverse(res.begin(),res.end());
+    return res;
+}
