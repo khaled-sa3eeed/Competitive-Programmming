@@ -1,0 +1,16 @@
+void compress(vector<int>& a)
+{
+    // 
+    int start = 0;
+    int cur_n = a.size();
+    vector<pair<int, int>> pairs(cur_n);
+    for (int i = 0; i < cur_n; ++i) { pairs[i] = {a[i], i}; }
+
+    sort(pairs.begin(), pairs.end());
+    int nxt = start;
+    for (int i = 0; i < cur_n; ++i)
+    {
+        if (i > 0 && pairs[i - 1].first != pairs[i].first) { nxt++; }
+        a[pairs[i].second] = nxt;
+    }
+}
